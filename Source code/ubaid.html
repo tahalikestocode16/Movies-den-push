@@ -997,6 +997,120 @@
             margin-top: 20px;
         }
 
+        /* Bookings Section */
+        .bookings-section {
+            margin-top: 20px;
+        }
+
+        .bookings-section h3 {
+            font-size: 1.3rem;
+            color: var(--pink);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .bookings-items {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 400px;
+            overflow-y: scroll;
+            scrollbar-width: thin;
+            scrollbar-color: var(--pink) rgba(255, 255, 255, 0.05);
+            padding-right: 5px;
+        }
+
+        .booking-item {
+            background: radial-gradient(circle at top left, rgba(255, 42, 109, 0.12), rgba(17, 13, 24, 0.95));
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(255, 42, 109, 0.3);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: slideIn 0.5s ease backwards;
+            animation-delay: calc(var(--index, 0) * 0.1s);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .booking-item:hover {
+            border-color: rgba(255, 42, 109, 0.7);
+            background: radial-gradient(circle at top left, rgba(255, 42, 109, 0.16), rgba(17, 13, 24, 0.95));
+            transform: translateX(10px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(255, 42, 109, 0.3);
+        }
+
+        .booking-item-image {
+            width: 80px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .booking-item:hover .booking-item-image {
+            transform: scale(1.1) rotate(2deg);
+        }
+
+        .booking-item-content {
+            flex: 1;
+        }
+
+        .booking-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .booking-item-title {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .booking-id {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .booking-status {
+            background: var(--green);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .booking-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .booking-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .booking-detail i {
+            color: var(--pink);
+            font-size: 0.9rem;
+        }
+
+        .empty-bookings {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
         .wishlist-section h3 {
             font-size: 1.3rem;
             color: var(--pink);
@@ -1728,8 +1842,13 @@
               <i class="bx bx-cog"></i>
               <span>Account Settings</span>
             </button>
-          </div>
-        </div>
+            <!-- Added My Bookings menu item -->
+            <button class="account-menu-item" onclick="switchTab('bookings', event)">
+              <i class="bx bx-calendar-check"></i>
+              <span>My Bookings</span>
+              <span class="badge" id="menuBookingsCount">0</span>
+            </button>
+          </div>        </div>
 
         <!-- Right Content Area -->
         <div class="account-content">
@@ -1765,9 +1884,12 @@
             <button class="account-tab" onclick="switchTab('settings', event)" title="Settings">
               <i class="bx bx-cog"></i>
             </button>
-          </div>
-
-          <!-- Overview Tab -->
+            <!-- Added Bookings tab -->
+            <button class="account-tab" onclick="switchTab('bookings', event)" title="Bookings">
+              <i class="bx bx-calendar-check"></i>
+              <span class="tab-badge" id="bookingsTabCount">0</span>
+            </button>
+          </div>          <!-- Overview Tab -->
           <div id="overviewTab" class="account-tab-content active">
             <div class="account-stats">
               <div class="stat-card">
@@ -1827,10 +1949,9 @@
                   <p style="font-size: 0.85rem; margin-top: 10px;">Start adding movies to your cart!</p>
                 </div>
               </div>
+              <button type="button" class="btn" onclick="checkoutCart()" style="margin-top: 20px; width: 100%;"><i class="fas fa-shopping-cart"></i> Checkout Cart</button>
             </div>
-          </div>
-
-          <!-- Wishlist Tab -->
+          </div>          <!-- Wishlist Tab -->
           <div id="wishlistTab" class="account-tab-content">
             <div class="wishlist-section">
               <div class="section-header">
@@ -1894,10 +2015,25 @@
             </div>
           </div>
         </div>
+        
+        <!-- Added Bookings Tab -->
+        <div id="bookingsTab" class="account-tab-content">
+          <div class="bookings-section">
+            <div class="section-header">
+              <i class="bx bx-calendar-check"></i>
+              <h3>My Bookings</h3>
+            </div>
+            <div class="bookings-items" id="bookingsItems">
+              <div class="empty-bookings">
+                <div style="font-size: 3rem; margin-bottom: 15px; color: rgba(255, 42, 109, 0.5);"><i class="fas fa-ticket-alt"></i></div>
+                <p>No bookings yet</p>
+                <p style="font-size: 0.85rem; margin-top: 10px;">Your booked tickets will appear here after checkout!</p>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <!-- Toggle Panels -->
+        </div>
+      </div>      <!-- Toggle Panels -->
       <div class="toggle-box">
         <div class="toggle-panel toggle-left">
           <h1>Hello, Welcome!</h1>
@@ -2231,18 +2367,87 @@
                 if (menuItem) menuItem.classList.add('active');
             }
             
-            // Refresh data when switching to cart or wishlist
+            // Refresh data when switching to cart, wishlist, or bookings
             if (tabName === 'cart') {
                 loadCart();
                 updateStats();
             } else if (tabName === 'wishlist') {
                 loadWishlist();
                 updateStats();
+            } else if (tabName === 'bookings') {
+                loadBookings();
+                updateStats();
             }
         }
+        // Function to simulate checkout process
+        function checkoutCart() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) return;
 
-        function loadCart() {
-            const cartItemsEl = document.getElementById('cartItems');
+            // Get current cart items
+            let cartItems = [];
+            const possibleKeys = [
+                'cartItems',
+                'cart_' + currentUser,
+                'shoppingCart',
+                'userCart',
+                'movieCart'
+            ];
+
+            for (const key of possibleKeys) {
+                const stored = localStorage.getItem(key);
+                if (stored) {
+                    try {
+                        const parsed = JSON.parse(stored);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            cartItems = parsed;
+                            break;
+                        }
+                    } catch(e) {
+                        console.error('Error parsing cart:', e);
+                    }
+                }
+            }
+
+            if (cartItems.length === 0) {
+                showToast("Your cart is empty!");
+                return;
+            }
+
+            // Get existing bookings
+            let bookings = JSON.parse(localStorage.getItem('bookings_' + currentUser) || '[]');
+
+            // Create booking entries for each cart item
+            const now = new Date();
+            cartItems.forEach(item => {
+                const booking = {
+                    title: item.title,
+                    img: item.img || item.image,
+                    bookingId: 'BK' + Date.now() + Math.floor(Math.random() * 1000),
+                    bookingDate: now.toISOString(),
+                    totalAmount: item.price || 9.99,
+                    ticketCount: 1
+                };
+                bookings.push(booking);
+            });
+
+            // Save bookings
+            localStorage.setItem('bookings_' + currentUser, JSON.stringify(bookings));
+
+            // Clear cart
+            localStorage.setItem('cartItems', JSON.stringify([]));
+            if (currentUser) {
+                localStorage.setItem('cart_' + currentUser, JSON.stringify([]));
+            }
+
+            // Update UI
+            loadCart();
+            loadBookings();
+            updateStats();
+            showToast("Checkout successful! Your tickets have been booked.");
+        }
+
+        function loadCart() {            const cartItemsEl = document.getElementById('cartItems');
             if (!cartItemsEl) {
                 console.log('Cart items container not found');
                 return;
@@ -2592,6 +2797,100 @@
             }).join('');
         }
 
+        function loadBookings() {
+            const bookingsItems = document.getElementById('bookingsItems');
+            if (!bookingsItems) return;
+            
+            const currentUser = localStorage.getItem('currentUser');
+            
+            // Get bookings from localStorage
+            let bookings = [];
+            const stored = localStorage.getItem('bookings_' + currentUser);
+            if (stored) {
+                try {
+                    bookings = JSON.parse(stored);
+                } catch(e) {
+                    console.error('Error parsing bookings:', e);
+                    bookings = [];
+                }
+            }
+            
+            // Ensure bookings is an array
+            if (!Array.isArray(bookings)) {
+                bookings = [];
+            }
+            
+            // Update bookings count in menu and tabs
+            const menuBookingsCount = document.getElementById('menuBookingsCount');
+            if (menuBookingsCount) menuBookingsCount.textContent = bookings.length;
+            const bookingsTabCount = document.getElementById('bookingsTabCount');
+            if (bookingsTabCount) bookingsTabCount.textContent = bookings.length;
+            
+            if (bookings.length === 0) {
+                bookingsItems.innerHTML = `
+                    <div class="empty-bookings">
+                        <div style="font-size: 3rem; margin-bottom: 15px; color: rgba(255, 42, 109, 0.5);"><i class="fas fa-ticket-alt"></i></div>
+                        <p>No bookings yet</p>
+                        <p style="font-size: 0.85rem; margin-top: 10px;">Your booked tickets will appear here!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort bookings by date (newest first)
+            bookings.sort((a, b) => new Date(b.bookingDate) - new Date(a.bookingDate));
+
+            bookingsItems.innerHTML = bookings.map((booking, index) => {
+                const movieImagePath = getMovieImagePath(booking.title);
+                let imgSrc = movieImagePath || booking.img || booking.image || 'images/dune.jpg';
+                
+                // Format date
+                const bookingDate = new Date(booking.bookingDate);
+                const formattedDate = bookingDate.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+                const formattedTime = bookingDate.toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                return `
+                <div class="booking-item" style="--index: ${index};">
+                    <img src="${imgSrc}" alt="${escapeHtml(booking.title)}" class="booking-item-image" onerror="this.onerror=null; this.src='images/dune.jpg';">
+                    <div class="booking-item-content">
+                        <div class="booking-item-header">
+                            <div>
+                                <div class="booking-item-title">${escapeHtml(booking.title)}</div>
+                                <div class="booking-id">Booking ID: ${booking.bookingId}</div>
+                            </div>
+                            <span class="booking-status">Confirmed</span>
+                        </div>
+                        <div class="booking-details">
+                            <div class="booking-detail">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span><strong>Date:</strong> ${formattedDate}</span>
+                            </div>
+                            <div class="booking-detail">
+                                <i class="fas fa-clock"></i>
+                                <span><strong>Time:</strong> ${formattedTime}</span>
+                            </div>
+                            <div class="booking-detail">
+                                <i class="fas fa-dollar-sign"></i>
+                                <span><strong>Amount:</strong> $${(booking.totalAmount || 9.99).toFixed(2)}</span>
+                            </div>
+                            <div class="booking-detail">
+                                <i class="fas fa-ticket-alt"></i>
+                                <span><strong>Tickets:</strong> ${booking.ticketCount || 1}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
         function changePassword() {
             const currentUser = localStorage.getItem('currentUser');
             if (!currentUser) return;
@@ -2640,14 +2939,58 @@
             }, 1000);
         }
 
+        function getMovieImagePath(title) {
+            const imageMap = {
+                // Hero movies
+                'Batman Beyond': 'images/batman.png',
+                'Bleach: Blood War': 'images/ichigo.jpg',
+                'Dandadan: Season 2': 'images/silk.jpg',
+                'Dandadan: Season 2 ': 'images/silk.jpg',
+                'Jujutsu Kaisen': 'images/kai.jpg',
+                'Spiderverse': 'images/spidey.jpg',
+                'One Piece': 'images/piece.jpg',
+                'Demon Slayer': 'images/tanjiro.jpg',
+                'Interstellar': 'images/hole.jpg',
+                'Cyberbat': 'images/rob.jpg',
+                'Suzume no tojimari': 'images/5815029.jpg',
+                'Suzume no tojimari ': 'images/5815029.jpg',
+                // Carousel movies
+                'Squidgame': 'images/Squid Game.jpg',
+                'Cyberpunk: Edgerunner': 'images/cyberpunk.jpg',
+                'Suzume': 'images/Suzume (2022) - Makoto Shinkai.jpg',
+                'Inception': 'images/Inception - for @filmthusiast.jpg',
+                'Dandadan: Evil Eye': 'images/dandadan.jpg',
+                'Apothecary Diaries': 'images/_The Apothecary Diaries_.jpg',
+                'Loki Series': 'images/loki.jpg',
+                'Mermaid': 'images/The Little Mermaid ( 11.jpg',
+                '3 Idiots': 'images/3 Idiots (2009)_.jpg',
+                'Dhamaal': 'images/TOTAL DHAMAAL.jpg',
+                'Moana': 'images/New Movie Posters for Moana.jpg',
+                'Luffy': 'images/Luffy.jpg',
+                'Jujutsu kaisen': 'images/jujutsu.jpg',
+                'Solo leveling': 'images/Solo Leveling Poster.jpg',
+                'Solo leveling ': 'images/Solo Leveling Poster.jpg',
+                'Naruto': 'images/naruto.jpg',
+                'Bleach': 'images/Bleach Resonance Of Souls.jpg',
+                // Trending section
+                'Dandadan S1': 'images/ken.jpg',
+                'Spiderverse Beyond': 'images/spiderverse.png',
+                // IMAX movies
+                'Dune': 'images/dune.jpg',
+                'Oppenheimer': 'images/oppenheimer.png',
+                'The Dark Knight': 'images/batman.jpg',
+                'Squid Game': 'images/squid.jpg',
+                'Money Heist': 'images/moneyheist.jpg'
+            };
+            return imageMap[title] || '';
+        }
+
         function escapeHtml(text) {
             if (!text) return '';
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
-        }
-
-        function showToast(message) {
+        }        function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.classList.add('show');
