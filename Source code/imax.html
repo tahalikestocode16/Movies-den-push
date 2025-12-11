@@ -72,25 +72,32 @@
       padding: 15px 3vw;
       position: fixed;
       top: 20px;
-  left: 0;
-  right: 0;
-      backdrop-filter: blur(10px);
-      background: rgba(0, 0, 0, 0.3);
+      left: 0;
+      right: 0;
+      backdrop-filter: none;
+      background: rgba(0, 0, 0, 0.15);
       border-radius: 15px;
       margin: 0 20px;
       z-index: 1000;
       width: calc(100vw - 40px);
       max-width: calc(100vw - 40px);
       box-sizing: border-box;
+      flex-wrap: nowrap;
+      gap: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
 
     nav .logo {
       display: flex;
       align-items: center;
       font-size: 32px;
-  font-weight: 700;
+      font-weight: 700;
       z-index: 1501;
       transition: all 0.3s ease;
+      flex-shrink: 0;
+      min-width: 0;
+      margin-right: auto;
       color: white;
       text-decoration: none;
     }
@@ -104,6 +111,7 @@
       margin-right: 10px;
       filter: drop-shadow(0 0 10px rgba(255, 42, 109, 0.5));
       transition: transform 0.3s ease;
+      flex-shrink: 0;
     }
 
     nav .logo:hover img {
@@ -111,17 +119,25 @@
     }
 
     nav .logo .name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       color: #ff2a6d;
     }
 
     nav .navlinks {
-      display: flex;
-      list-style: none;
-      gap: 30px;
-      align-items: center;
       position: relative;
+      display: flex;
+      gap: 5px;
+      list-style: none;
+      align-items: center;
+      flex: 0 1 auto;
+      justify-content: center;
+      min-width: 0;
+      margin: 0 auto;
     }
 
+    /* Sliding background element */
     nav .navlinks .sliding-bg {
       position: absolute;
       top: 0;
@@ -141,35 +157,66 @@
       text-decoration: none;
       color: white;
       font-size: 16px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       white-space: nowrap;
       position: relative;
-      z-index: 1;
-      padding: 8px 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 18px;
       border-radius: 999px;
+      background: transparent;
+      border: 1.5px solid transparent;
+      font-weight: 500;
+      overflow: visible;
+      z-index: 1;
+    }
+
+    nav .navlinks a::after {
+      display: none; /* Remove underline effect */
+    }
+
+    nav .navlinks a::before {
+      display: none;
     }
 
     nav .navlinks a:hover {
       color: white;
+      font-weight: 600;
+      transform: translateY(-3px) scale(1.05);
+      z-index: 2;
+      border-color: transparent;
+    }
+
+    nav .navlinks a:active {
+      transform: translateY(-1px) scale(1.02);
+    }
+
+    /* Remove default active state from home button */
+    nav .navlinks a.home-btn {
+      background: transparent;
+      border-color: transparent;
+      color: white;
+      font-weight: 500;
+      box-shadow: none;
     }
 
     nav .icons {
       display: flex;
-      gap: 20px;
+      gap: 15px;
       font-size: 22px;
       cursor: pointer;
       align-items: center;
       z-index: 1501;
-      margin-right: 20px;
-      margin-left: 20px;
+      flex-shrink: 0;
+      margin-left: auto;
+      flex-wrap: nowrap;
     }
 
     #bar {
       display: none;
       font-size: 26px;
       transition: all 0.3s ease;
-  color: white;
-  cursor: pointer;
     }
 
     #bar:hover {
@@ -223,6 +270,66 @@
       color: white;
       text-decoration: none;
       transition: 0.3s;
+    }
+
+    /* Add-cart-btn styling to match index.html */
+    .add-cart-btn {
+      padding: 9px 18px;
+      background: #ff2a6d;
+      color: white;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 18px rgba(255, 42, 109, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .add-cart-btn::before {
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      content: "\f145";
+      margin-right: 6px;
+      font-size: 14px;
+      transition: transform 0.3s ease;
+    }
+
+    .add-cart-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    .add-cart-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 30px rgba(255, 42, 109, 0.5);
+      background: linear-gradient(135deg, #ff2a6d, #ff5a8d);
+    }
+
+    .add-cart-btn:hover::before {
+      transform: scale(1.2) rotate(10deg);
+    }
+
+    .add-cart-btn:hover::after {
+      width: 300px;
+      height: 300px;
+    }
+
+    .add-cart-btn:active {
+      transform: translateY(-1px) scale(1.02);
     }
 
     .icons a:hover {
@@ -2677,7 +2784,7 @@
   background: linear-gradient(135deg, #ff5a8d, #a855f7);
 }
 
-/* Checkout modal with animated card */
+/* Checkout modal */
 .checkout-modal {
   position: fixed;
   inset: 0;
@@ -2689,168 +2796,34 @@
   z-index: 11000;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 20px;
 }
 
 .checkout-modal.show {
   display: flex;
-  opacity: 1;
 }
 
 .checkout-dialog {
-  background: radial-gradient(circle at top left, #25122d 0%, #0d0b14 55%, #07060a 100%);
-  border-radius: 20px;
-  width: 90%;
-  max-width: 800px;
-  max-height: 95vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 42, 109, 0.3);
-  border: 1px solid rgba(255, 42, 109, 0.4);
-  transform: scale(0.9) translateY(20px);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  overflow: hidden;
-  padding: 0;
-  position: relative;
+  background: #0f0d16;
+  padding: 24px 22px;
+  border-radius: 14px;
+  width: 360px;
+  max-width: 92vw;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 42, 109, 0.45);
+  color: #fff;
+  margin: 20px;
 }
 
-.checkout-modal.show .checkout-dialog {
-  transform: scale(1) translateY(0);
-}
-
-.checkout-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px 28px;
-  border-bottom: 1px solid rgba(255, 42, 109, 0.2);
-  background: linear-gradient(135deg, rgba(255, 42, 109, 0.1), rgba(138, 43, 226, 0.1));
-}
-
-.checkout-header h3 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #fff, #ff2a6d);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0;
-  letter-spacing: 0.03em;
-}
-
-.checkout-close {
-  font-size: 1.8rem;
+.checkout-dialog h3 {
+  margin-bottom: 12px;
+  font-size: 1.2rem;
   color: #ff2a6d;
-  cursor: pointer;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-  background: rgba(255, 42, 109, 0.1);
-}
-
-.checkout-close:hover {
-  color: white;
-  background: rgba(255, 42, 109, 0.3);
-  transform: rotate(90deg) scale(1.1);
-}
-
-.checkout-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px 28px;
-  padding-top: 180px;
-  scrollbar-width: thin;
-  scrollbar-color: #ff2a6d #1a1525;
-}
-
-.checkout-body::-webkit-scrollbar {
-  width: 8px;
-}
-
-.checkout-body::-webkit-scrollbar-track {
-  background: #1a1525;
-  border-radius: 10px;
-}
-
-.checkout-body::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #ff2a6d, #8a2be2);
-  border-radius: 10px;
-}
-
-.checkout-body::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #ff5a8d, #a855f7);
-}
-
-@media screen and (max-width: 480px) {
-  .checkout-body {
-    padding-top: 165px;
-  }
 }
 
 .checkout-dialog p {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 18px;
-  line-height: 1.5;
-}
-
-.checkout-footer {
-  padding: 24px 28px;
-  border-top: 1px solid rgba(255, 42, 109, 0.2);
-  background: linear-gradient(135deg, rgba(255, 42, 109, 0.08), rgba(138, 43, 226, 0.08));
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.checkout-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
-
-.checkout-cancel {
-  padding: 10px 18px;
-  background: transparent;
-  border-radius: 25px;
-  border: 1px solid rgba(255, 42, 109, 0.4);
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 500;
-}
-
-.checkout-cancel:hover {
-  background: rgba(255, 42, 109, 0.1);
-  border-color: rgba(255, 42, 109, 0.6);
-}
-
-.checkout-pay {
-  padding: 10px 22px;
-  background: linear-gradient(135deg, #ff2a6d, #8a2be2);
-  border-radius: 25px;
-  border: none;
-  color: #fff;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 42, 109, 0.3);
-}
-
-.checkout-pay:hover {
-  background: linear-gradient(135deg, #e0205f, #7a1be2);
-  box-shadow: 0 6px 20px rgba(255, 42, 109, 0.5);
-  transform: translateY(-2px);
-}
-
-.checkout-pay:active {
-  transform: translateY(0);
+  font-size: 0.85rem;
+  color: #c3bacf;
+  margin-bottom: 12px;
 }
 
 .checkout-row {
@@ -2859,310 +2832,66 @@
 }
 
 .checkout-label {
-  font-size: 0.85rem;
-  margin-bottom: 6px;
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 500;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+  color: #d6cfea;
 }
 
 .checkout-input {
   width: 100%;
-  padding: 11px 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 42, 109, 0.3);
-  background: rgba(22, 19, 34, 0.8);
+  padding: 9px 10px;
+  border-radius: 8px;
+  border: 1px solid #2b2338;
+  background: #161322;
   color: #fff;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   outline: none;
-  transition: all 0.3s ease;
-  font-family: 'Source Sans Pro', sans-serif;
-}
-
-.checkout-input:hover {
-  border-color: rgba(255, 42, 109, 0.5);
+  transition: border-color 0.3s;
 }
 
 .checkout-input:focus {
   border-color: #ff2a6d;
-  box-shadow: 0 0 15px rgba(255, 42, 109, 0.3);
-  background: rgba(22, 19, 34, 0.95);
 }
 
-.checkout-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-/* Animated Credit Card Styles */
-.card-wrapper {
-  max-width: 430px;
-  height: 270px;
-  margin: -130px auto 0;
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  perspective: 1000px;
-}
-
-@media screen and (max-width: 480px) {
-  .card-wrapper {
-    max-width: 310px;
-    height: 220px;
-    margin: -120px auto 0;
-  }
-}
-
-.card-item {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.8s cubic-bezier(0.71, 0.03, 0.56, 0.85);
-}
-
-.card-item.flipped {
-  transform: rotateY(180deg);
-}
-
-.card-side {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 20px 60px 0 rgba(14, 42, 90, 0.55);
-}
-
-.card-side.front {
-  transform: rotateY(0deg);
-}
-
-.card-side.back {
-  transform: rotateY(180deg);
-}
-
-.card-cover {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #1c1d27 0%, #2a1b3d 50%, #1c1d27 100%);
-  border-radius: 15px;
-}
-
-.card-cover::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(255, 42, 109, 0.1) 0%, rgba(138, 43, 226, 0.1) 50%, rgba(255, 42, 109, 0.1) 100%);
-}
-
-.card-focus {
-  position: absolute;
-  z-index: 3;
-  border-radius: 5px;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  transition: all 0.35s cubic-bezier(0.71, 0.03, 0.56, 0.85);
-  opacity: 0;
-  pointer-events: none;
-  border: 2px solid rgba(255, 42, 109, 0.65);
-}
-
-.card-focus.active {
-  opacity: 1;
-}
-
-.card-content {
-  position: relative;
-  z-index: 4;
-  height: 100%;
-  padding: 25px 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  color: #fff;
-  font-family: 'Source Code Pro', monospace;
-  text-shadow: 7px 6px 10px rgba(14, 42, 90, 0.8);
-}
-
-.card-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 40px;
-}
-
-.card-chip {
-  width: 60px;
-  height: 45px;
-  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-  border-radius: 8px;
-  position: relative;
-  overflow: hidden;
-}
-
-.card-chip::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80%;
-  height: 80%;
-  border: 2px solid rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-}
-
-.card-type {
-  height: 45px;
+.checkout-actions {
+  margin-top: 14px;
   display: flex;
   justify-content: flex-end;
-  align-items: center;
+  gap: 10px;
 }
 
-.card-type-img {
-  height: 100%;
-  object-fit: contain;
-}
-
-.card-number {
-  font-size: 27px;
-  font-weight: 500;
-  margin-bottom: 35px;
-  letter-spacing: 2px;
-  font-family: 'Source Code Pro', monospace;
-  min-height: 40px;
-  display: flex;
-  align-items: center;
-}
-
-.card-number-item {
-  display: inline-block;
-  width: 16px;
-  text-align: center;
-}
-
-.card-number-item.active {
-  width: 30px;
-}
-
-.card-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-
-.card-holder {
-  flex: 1;
-}
-
-.card-holder-label {
-  font-size: 13px;
-  opacity: 0.7;
-  margin-bottom: 6px;
-  display: block;
-}
-
-.card-holder-name {
-  font-size: 18px;
-  text-transform: uppercase;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 200px;
-}
-
-.card-date {
-  font-size: 18px;
-  text-align: right;
-}
-
-.card-date-label {
-  font-size: 13px;
-  opacity: 0.7;
-  margin-bottom: 6px;
-  display: block;
-}
-
-.card-date-value {
-  font-size: 18px;
-}
-
-.card-band {
-  background: rgba(0, 0, 19, 0.8);
-  width: 100%;
-  height: 50px;
-  margin-top: 30px;
-  position: relative;
-  z-index: 2;
-}
-
-.card-cvv {
-  padding: 15px;
-  text-align: right;
-  position: relative;
-  z-index: 2;
-}
-
-.card-cvv-label {
-  font-size: 15px;
-  font-weight: 500;
-  color: #fff;
-  margin-bottom: 5px;
-  padding-right: 10px;
-}
-
-.card-cvv-band {
-  height: 45px;
-  background: #fff;
-  margin-bottom: 30px;
-  text-align: right;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 10px;
-  color: #1a3b5d;
-  font-size: 18px;
-  border-radius: 4px;
-  box-shadow: 0px 10px 20px -7px rgba(32, 56, 117, 0.35);
-  font-family: 'Source Code Pro', monospace;
-  letter-spacing: 3px;
-}
-
-.checkout-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.checkout-close {
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.checkout-cancel {
+  padding: 7px 13px;
   background: transparent;
-  border: 1px solid rgba(255, 42, 109, 0.3);
-  border-radius: 50%;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 24px;
+  border-radius: 999px;
+  border: 1px solid #3b3149;
+  color: #d6cfea;
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  line-height: 1;
+  transition: all 0.3s;
 }
 
-.checkout-close:hover {
-  border-color: rgba(255, 42, 109, 0.6);
-  background: rgba(255, 42, 109, 0.1);
+.checkout-cancel:hover {
+  border-color: #ff2a6d;
+  color: #ff2a6d;
+}
+
+.checkout-pay {
+  padding: 7px 16px;
+  background: #ff2a6d;
+  border-radius: 999px;
+  border: none;
   color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.checkout-pay:hover {
+  background: #e0205f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 42, 109, 0.5);
 }
 
 /* Add-to-cart toast (left bottom corner) */
@@ -3211,17 +2940,17 @@
 </head>
 <body>
   <nav>
-    <a href="index.html" class="logo">
+    <div class="logo">
       <img class="icon" src="images/tvicon.png" />
-      <h3 class="name">MoviesDen</h3>
-    </a>
+      <h3 class="name" >MoviesDen</h3>
+    </div>
 
     <div class="navlinks">
       <a href="index.html">Home</a>
       <a href="movies.html">Movies</a>
       <a href="imax.html">IMAX</a>
       <a href="watch.html">Trailers</a>
-        </div>
+    </div>
 
     <div class="icons" id="iconsContainer">
       <a id="cartIcon" class="cart-link" href="javascript:void(0)" onclick="(function(){const m=document.getElementById('cartModal'); if(m){m.classList.add('show'); if(typeof renderCartModal==='function') renderCartModal();}})();"><i class="fas fa-shopping-cart"></i> <span id="cartCount">0</span></a>
@@ -3234,7 +2963,7 @@
         <i class="fas fa-user" id="accountIcon"></i>
         <img id="profilePicture" src="" alt="Profile" class="profile-picture-nav" style="display: none;">
       </a>
-        </div>
+    </div>
   </nav>
 
   <!-- Movie 1 -->
@@ -3898,8 +3627,103 @@
       });
     }
 
+    // Check if user is logged in
+    function isLoggedIn() {
+      return localStorage.getItem('isLoggedIn') === 'true' && localStorage.getItem('currentUser');
+    }
+
+    // Show login required popup
+    function showLoginPopup() {
+      // Create popup if it doesn't exist
+      let popup = document.getElementById('loginPopup');
+      if (!popup) {
+        popup = document.createElement('div');
+        popup.id = 'loginPopup';
+        popup.className = 'cartModal';
+        
+        const popupContent = document.createElement('div');
+        popupContent.className = 'cartModalDialog';
+        
+        popupContent.innerHTML = `
+          <div class="cartModalHeader">
+            <h2>Login Required</h2>
+            <div class="cartModalClose">×</div>
+          </div>
+          <div class="cartModalBody" style="padding: 30px; text-align: center;">
+            <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 30px; line-height: 1.6; font-size: 1.1rem;">
+              You need to have an account to perform this action. Go to sign in page to register or login.
+            </p>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+              <button id="loginBtn" class="add-cart-btn">
+                <i class="fas fa-sign-in-alt"></i> Login Now
+              </button>
+              <button id="cancelBtn" class="add-cart-btn" style="background: transparent; border: 2px solid rgba(255, 255, 255, 0.3);">
+                Cancel
+              </button>
+            </div>
+          </div>
+        `;
+        
+        popup.appendChild(popupContent);
+        document.body.appendChild(popup);
+        
+        // Add event listeners
+        popup.querySelector('#loginBtn').addEventListener('click', function() {
+          window.location.href = 'ubaid.html';
+        });
+        
+        popup.querySelector('#cancelBtn').addEventListener('click', function() {
+          popup.classList.remove('show');
+        });
+        
+        // Add hover effects to buttons
+        const loginBtn = popup.querySelector('#loginBtn');
+        const cancelBtn = popup.querySelector('#cancelBtn');
+        
+        loginBtn.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-3px) scale(1.05)';
+          this.style.boxShadow = '0 10px 30px rgba(255, 42, 109, 0.5)';
+          this.style.background = 'linear-gradient(135deg, #ff2a6d, #ff5a8d)';
+        });
+        
+        loginBtn.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0) scale(1)';
+          this.style.boxShadow = 'none';
+          this.style.background = 'linear-gradient(135deg, #ff2a6d, #ff5a8d)';
+        });
+        
+        cancelBtn.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-3px) scale(1.05)';
+          this.style.boxShadow = '0 10px 30px rgba(255, 255, 255, 0.2)';
+          this.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+        });
+        
+        cancelBtn.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0) scale(1)';
+          this.style.boxShadow = 'none';
+          this.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+        });
+        
+        // Close on backdrop click or close button
+        popup.addEventListener('click', function(e) {
+          if (e.target === popup || e.target.classList.contains('cartModalClose')) {
+            popup.classList.remove('show');
+          }
+        });
+      }
+      
+      // Show popup with animation
+      popup.classList.add('show');
+    }
+
     // Wishlist Toggle
     function toggleWishlist(btn, movieTitle) {
+      // Check if user is logged in
+      if (!isLoggedIn()) {
+        showLoginPopup();
+        return;
+      }
+      
       btn.classList.toggle('active');
       const icon = btn.querySelector('i');
       
@@ -4283,6 +4107,12 @@
           e.stopPropagation();
           e.stopImmediatePropagation();
           
+          // Check if user is logged in
+          if (!isLoggedIn()) {
+            showLoginPopup();
+            return;
+          }
+          
           const currentSection = this.closest('.movie-hero');
           if (!currentSection) return;
           
@@ -4378,106 +4208,46 @@
     <span id="cartToastText">Item added to cart</span>
   </div>
 
-  <!-- Checkout Modal with Animated Card -->
+  <!-- Checkout Modal -->
   <div id="checkoutModal" class="checkout-modal">
     <div class="checkout-dialog">
-      <div class="checkout-header">
-        <h3>💳 Checkout</h3>
-        <div id="checkoutModalClose" class="checkout-close">×</div>
+      <h3>Checkout</h3>
+      <p>Enter your details to complete the purchase. (Demo only — no real payment.)</p>
+
+      <div>
+        <div class="checkout-label">Full Name</div>
+        <input id="checkoutName" type="text" class="checkout-input" placeholder="John Doe" />
       </div>
-      <div class="checkout-body">
-        <!-- Animated Credit Card -->
-        <div class="card-wrapper">
-          <div class="card-item" id="creditCard">
-            <!-- Front of Card -->
-            <div class="card-side front">
-              <div class="card-cover"></div>
-              <div class="card-focus" id="cardFocus"></div>
-              <div class="card-content">
-                <div class="card-top">
-                  <div class="card-chip"></div>
-                  <div class="card-type">
-                    <img id="cardTypeImg" src="" alt="" class="card-type-img" style="display: none;">
-                  </div>
-                </div>
-                <div class="card-number" id="cardNumberDisplay">
-                  <span class="card-number-item">####</span>
-                  <span class="card-number-item">####</span>
-                  <span class="card-number-item">####</span>
-                  <span class="card-number-item">####</span>
-                </div>
-                <div class="card-info">
-                  <div class="card-holder">
-                    <div class="card-holder-label">Card Holder</div>
-                    <div class="card-holder-name" id="cardHolderDisplay">Full Name</div>
-                  </div>
-                  <div class="card-date">
-                    <div class="card-date-label">Expires</div>
-                    <div class="card-date-value" id="cardDateDisplay">MM/YY</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- Back of Card -->
-            <div class="card-side back">
-              <div class="card-cover"></div>
-              <div class="card-band"></div>
-              <div class="card-cvv">
-                <div class="card-cvv-label">CVV</div>
-                <div class="card-cvv-band" id="cardCvvDisplay">***</div>
-                <div class="card-type">
-                  <img id="cardTypeImgBack" src="" alt="" class="card-type-img" style="display: none;">
-                </div>
-              </div>
-            </div>
-          </div>
+
+      <div style="margin-top:8px;">
+        <div class="checkout-label">Email</div>
+        <input id="checkoutEmail" type="email" class="checkout-input" placeholder="you@example.com" />
+      </div>
+
+      <div style="margin-top:10px;">
+        <div class="checkout-label">Card Number</div>
+        <input id="checkoutCard" type="text" class="checkout-input" placeholder="1234 5678 9012 3456" />
+      </div>
+
+      <div class="checkout-row" style="margin-top:8px;">
+        <div style="flex:1;">
+          <div class="checkout-label">Expiry</div>
+          <input id="checkoutExpiry" type="text" class="checkout-input" placeholder="MM/YY" />
         </div>
-
-        <p style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 20px; margin-top: 20px;">Enter your details to complete the purchase. (Demo only — no real payment.)</p>
-
-        <div style="margin-bottom: 15px;">
-          <div class="checkout-label">Card Number</div>
-          <input id="checkoutCard" type="text" class="checkout-input" placeholder="1234 5678 9012 3456" maxlength="19" autocomplete="off" />
-        </div>
-
-        <div style="margin-bottom: 15px;">
-          <div class="checkout-label">Card Holder</div>
-          <input id="checkoutName" type="text" class="checkout-input" placeholder="John Doe" autocomplete="off" />
-        </div>
-
-        <div class="checkout-row" style="margin-bottom: 15px;">
-          <div style="flex:1; margin-right: 10px;">
-            <div class="checkout-label">Expiration Date</div>
-            <div style="display: flex; gap: 10px;">
-              <select id="checkoutMonth" class="checkout-input" style="flex: 1;">
-                <option value="">Month</option>
-              </select>
-              <select id="checkoutYear" class="checkout-input" style="flex: 1;">
-                <option value="">Year</option>
-              </select>
-            </div>
-          </div>
-          <div style="flex:1;">
-            <div class="checkout-label">CVV</div>
-            <input id="checkoutCvv" type="text" class="checkout-input" placeholder="123" maxlength="4" autocomplete="off" />
-          </div>
-        </div>
-
-        <div style="margin-bottom: 15px;">
-          <div class="checkout-label">Email</div>
-          <input id="checkoutEmail" type="email" class="checkout-input" placeholder="you@example.com" />
-        </div>
-
-        <div style="margin-bottom: 20px;">
-          <div class="checkout-label">Billing Address</div>
-          <input id="checkoutAddress" type="text" class="checkout-input" placeholder="Street, City, Country" />
+        <div style="flex:1;">
+          <div class="checkout-label">CVV</div>
+          <input id="checkoutCvv" type="password" class="checkout-input" placeholder="123" />
         </div>
       </div>
-      <div class="checkout-footer">
-        <div class="checkout-actions">
-          <button type="button" id="checkoutCancel" class="checkout-cancel">Cancel</button>
-          <button type="button" id="checkoutPay" class="checkout-pay">Pay Now</button>
-        </div>
+
+      <div style="margin-top:8px;">
+        <div class="checkout-label">Billing Address</div>
+        <input id="checkoutAddress" type="text" class="checkout-input" placeholder="Street, City, Country" />
+      </div>
+
+      <div class="checkout-actions">
+        <button id="checkoutCancel" class="checkout-cancel">Cancel</button>
+        <button id="checkoutPay" class="checkout-pay">Pay Now</button>
       </div>
     </div>
   </div>
@@ -4534,7 +4304,7 @@
         const nameInput = document.getElementById("checkoutName");
         const emailInput = document.getElementById("checkoutEmail");
         const cardInput = document.getElementById("checkoutCard");
-        const expiryInput = null; // Removed - using month/year dropdowns
+        const expiryInput = document.getElementById("checkoutExpiry");
         const cvvInput = document.getElementById("checkoutCvv");
         const addressInput = document.getElementById("checkoutAddress");
 
@@ -4543,193 +4313,11 @@
             if (cartItems.length === 0) return;
             checkoutModal.classList.add("show");
             cartModal.classList.remove("show");
-            // Initialize dropdowns for month/year
-            const monthSel = document.getElementById('checkoutMonth');
-            const yearSel = document.getElementById('checkoutYear');
-            if (monthSel && monthSel.options.length <= 1) {
-              monthSel.innerHTML = '<option value="">Month</option>';
-              for (let i=1; i<=12; i++) monthSel.innerHTML += `<option value="${i<10?'0'+i:i}">${i<10?'0'+i:i}</option>`;
-            }
-            if (yearSel && yearSel.options.length <= 1) {
-              const yr = new Date().getFullYear();
-              yearSel.innerHTML = '<option value="">Year</option>';
-              for (let i=0; i<12; i++) yearSel.innerHTML += `<option value="${yr+i}">${yr+i}</option>`;
-            }
-            // Initialize animated card
-            initAnimatedCard();
           });
-        }
-
-        // Animated Credit Card Functionality
-        function initAnimatedCard() {
-          const cardItem = document.getElementById('creditCard');
-          const cardNumberInput = document.getElementById('checkoutCard');
-          const cardNameInput = document.getElementById('checkoutName');
-          const cardMonthSelect = document.getElementById('checkoutMonth');
-          const cardYearSelect = document.getElementById('checkoutYear');
-          const cardCvvInput = document.getElementById('checkoutCvv');
-          const cardFocus = document.getElementById('cardFocus');
-          const cardNumberDisplay = document.getElementById('cardNumberDisplay');
-          const cardHolderDisplay = document.getElementById('cardHolderDisplay');
-          const cardDateDisplay = document.getElementById('cardDateDisplay');
-          const cardCvvDisplay = document.getElementById('cardCvvDisplay');
-          const cardTypeImg = document.getElementById('cardTypeImg');
-          const cardTypeImgBack = document.getElementById('cardTypeImgBack');
-
-          if (!cardItem) return;
-
-          // Card type detection
-          function getCardType(number) {
-            const num = number.replace(/\s/g, '');
-            if (/^4/.test(num)) return 'visa';
-            if (/^(34|37)/.test(num)) return 'amex';
-            if (/^5[1-5]/.test(num)) return 'mastercard';
-            if (/^6011/.test(num)) return 'discover';
-            return 'visa';
-          }
-
-          // Format card number with spaces
-          function formatCardNumber(value) {
-            const num = value.replace(/\s/g, '');
-            const cardType = getCardType(num);
-            const isAmex = cardType === 'amex';
-            const groups = isAmex ? [4, 6, 5] : [4, 4, 4, 4];
-            let formatted = '';
-            let index = 0;
-            
-            for (let i = 0; i < groups.length && index < num.length; i++) {
-              formatted += num.substring(index, index + groups[i]);
-              index += groups[i];
-              if (index < num.length) formatted += ' ';
-            }
-            
-            return formatted;
-          }
-
-          // Update card number display
-          function updateCardNumber(value) {
-            const num = value.replace(/\s/g, '');
-            const cardType = getCardType(num);
-            const isAmex = cardType === 'amex';
-            const mask = isAmex ? '#### ###### #####' : '#### #### #### ####';
-            const display = mask.split('').map((char, index) => {
-              if (char === ' ') return ' ';
-              if (index < num.length) {
-                return num[index];
-              }
-              return '#';
-            }).join('');
-
-            if (cardNumberDisplay) {
-              cardNumberDisplay.innerHTML = display.split('').map(char => {
-                if (char === ' ') return ' ';
-                return `<span class="card-number-item ${char === '#' ? '' : 'active'}">${char}</span>`;
-              }).join('');
-            }
-          }
-
-          // Update card type image
-          function updateCardType(number) {
-            const cardType = getCardType(number);
-            const typeMap = {
-              visa: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iMjUiIHZpZXdCb3g9IjAgMCA0MCAyNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjI1IiByeD0iMyIgZmlsbD0iIzAwMCIvPgo8cGF0aCBkPSJNMTAgMTJIMzBMMjggMTdIMTJMMTAgMTJaIiBmaWxsPSIjMDAzOTdGIi8+Cjwvc3ZnPg==',
-              mastercard: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iMjUiIHZpZXdCb3g9IjAgMCA0MCAyNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjI1IiByeD0iMyIgZmlsbD0iIzAwMCIvPgo8Y2lyY2xlIGN4PSIxNSIgY3k9IjEyLjUiIHI9IjciIGZpbGw9IiNFRjAwMDAiLz4KPGNpcmNsZSBjeD0iMjUiIGN5PSIxMi41IiByPSI3IiBmaWxsPSIjRkY5RTIwIi8+Cjwvc3ZnPg==',
-              amex: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iMjUiIHZpZXdCb3g9IjAgMCA0MCAyNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjI1IiByeD0iMyIgZmlsbD0iIzAwN2NkNiIvPgo8L3N2Zz4=',
-              discover: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iMjUiIHZpZXdCb3g9IjAgMCA0MCAyNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjI1IiByeD0iMyIgZmlsbD0iI0ZGNkEwMCIvPgo8L3N2Zz4='
-            };
-            
-            if (typeMap[cardType] && cardTypeImg && cardTypeImgBack) {
-              cardTypeImg.src = typeMap[cardType];
-              cardTypeImg.style.display = 'block';
-              cardTypeImgBack.src = typeMap[cardType];
-              cardTypeImgBack.style.display = 'block';
-            }
-          }
-
-          // Card number input handler
-          if (cardNumberInput) {
-            // Remove existing listeners by cloning
-            const newCardNumberInput = cardNumberInput.cloneNode(true);
-            cardNumberInput.parentNode.replaceChild(newCardNumberInput, cardNumberInput);
-            
-            newCardNumberInput.addEventListener('input', (e) => {
-              let value = e.target.value.replace(/\D/g, '');
-              const cardType = getCardType(value);
-              const maxLength = cardType === 'amex' ? 15 : 16;
-              value = value.substring(0, maxLength);
-              const formatted = formatCardNumber(value);
-              e.target.value = formatted;
-              updateCardNumber(value);
-              updateCardType(value);
-            });
-          }
-
-          // Card name input handler
-          if (cardNameInput) {
-            // Remove existing listeners by cloning
-            const newCardNameInput = cardNameInput.cloneNode(true);
-            cardNameInput.parentNode.replaceChild(newCardNameInput, cardNameInput);
-            
-            newCardNameInput.addEventListener('input', (e) => {
-              const value = e.target.value.toUpperCase() || 'FULL NAME';
-              if (cardHolderDisplay) {
-                cardHolderDisplay.textContent = value || 'FULL NAME';
-              }
-            });
-          }
-
-          // Date select handlers
-          if (cardMonthSelect && cardYearSelect) {
-            const updateDateDisplay = () => {
-              const month = cardMonthSelect.value || 'MM';
-              const year = cardYearSelect.value ? String(cardYearSelect.value).slice(-2) : 'YY';
-              if (cardDateDisplay) {
-                cardDateDisplay.textContent = `${month}/${year}`;
-              }
-            };
-
-            cardMonthSelect.addEventListener('change', updateDateDisplay);
-            cardYearSelect.addEventListener('change', updateDateDisplay);
-          }
-
-          // CVV input handler - flip card
-          if (cardCvvInput) {
-            // Remove existing listeners by cloning
-            const newCvvInput = cardCvvInput.cloneNode(true);
-            cardCvvInput.parentNode.replaceChild(newCvvInput, cardCvvInput);
-            
-            newCvvInput.addEventListener('focus', () => {
-              if (cardItem) {
-                cardItem.classList.add('flipped');
-              }
-            });
-
-            newCvvInput.addEventListener('blur', () => {
-              if (cardItem) {
-                cardItem.classList.remove('flipped');
-              }
-            });
-
-            newCvvInput.addEventListener('input', (e) => {
-              let value = e.target.value.replace(/\D/g, '').substring(0, 4);
-              e.target.value = value;
-              if (cardCvvDisplay) {
-                cardCvvDisplay.textContent = value || '***';
-              }
-            });
-          }
         }
 
         if (checkoutCancel && checkoutModal) {
           checkoutCancel.addEventListener("click", () => {
-            checkoutModal.classList.remove("show");
-          });
-        }
-
-        // Add close button handler
-        const checkoutModalClose = document.getElementById("checkoutModalClose");
-        if (checkoutModalClose && checkoutModal) {
-          checkoutModalClose.addEventListener("click", () => {
             checkoutModal.classList.remove("show");
           });
         }
@@ -4739,15 +4327,12 @@
             // Basic form validation
             const name = nameInput ? nameInput.value.trim() : "";
             const email = emailInput ? emailInput.value.trim() : "";
-            const card = cardInput ? cardInput.value.replace(/\s+/g, "").replace(/\D/g, "") : "";
-            const monthInput = document.getElementById("checkoutMonth");
-            const yearInput = document.getElementById("checkoutYear");
-            const month = monthInput ? monthInput.value : "";
-            const year = yearInput ? yearInput.value : "";
+            const card = cardInput ? cardInput.value.replace(/\s+/g, "") : "";
+            const expiry = expiryInput ? expiryInput.value.trim() : "";
             const cvv = cvvInput ? cvvInput.value.trim() : "";
             const address = addressInput ? addressInput.value.trim() : "";
 
-            if (!name || !email || !card || !month || !year || !cvv || !address) {
+            if (!name || !email || !card || !expiry || !cvv || !address) {
               showCartToast("Please fill in all fields before paying.");
               return;
             }
@@ -4758,8 +4343,9 @@
               return;
             }
 
-            if (card.length < 13 || card.length > 19) {
-              showCartToast("Please enter a valid card number.");
+            const cardOk = /^\d{16}$/.test(card);
+            if (!cardOk) {
+              showCartToast("Enter a valid 16-digit card number (numbers only).");
               return;
             }
 
@@ -4769,10 +4355,15 @@
               return;
             }
 
-            const expMonth = parseInt(month, 10);
-            const expYear = parseInt(year, 10);
+            const expMatch = expiry.match(/^(\d{2})\/(\d{2})$/);
+            if (!expMatch) {
+              showCartToast("Please enter expiry in MM/YY format.");
+              return;
+            }
+            const expMonth = parseInt(expMatch[1], 10);
+            const expYear = 2000 + parseInt(expMatch[2], 10);
             if (expMonth < 1 || expMonth > 12) {
-              showCartToast("Please select a valid expiry month.");
+              showCartToast("Please enter a valid expiry month (01–12).");
               return;
             }
             const now = new Date();
@@ -4783,47 +4374,7 @@
             }
 
             // Simple demo "success" flow after validation
-            
-            // Save booking to localStorage BEFORE clearing cart
-            const currentUser = localStorage.getItem('currentUser');
-            if (currentUser) {
-              // Get existing bookings
-              let bookings = [];
-              const storedBookings = localStorage.getItem('bookings_' + currentUser);
-              if (storedBookings) {
-                try {
-                  bookings = JSON.parse(storedBookings);
-                } catch(e) {
-                  bookings = [];
-                }
-              }
-              
-              // Create booking record for each cart item
-              const bookingDate = new Date();
-              const bookingId = 'BK' + Date.now() + Math.random().toString(36).substr(2, 9).toUpperCase();
-              
-              // Since cart is being cleared, we need to save items before clearing
-              const itemsToBook = [...cartItems];
-              
-              // Add each cart item as a booking
-              itemsToBook.forEach(item => {
-                bookings.push({
-                  bookingId: bookingId,
-                  title: item.title || item.name || 'Movie Ticket',
-                  img: item.img || item.image || item.src || 'images/dune.jpg',
-                  totalAmount: parseFloat(item.price) || 9.99,
-                  ticketCount: 1,
-                  bookingDate: bookingDate.toISOString(),
-                  userName: name,
-                  userEmail: email
-                });
-              });
-              
-              // Save updated bookings
-              localStorage.setItem('bookings_' + currentUser, JSON.stringify(bookings));
-            }
-            
-            showCartToast("Payment successful! Your tickets have been added to your bookings. Visit your Account to check.");
+            showCartToast("Payment successful (demo). Thank you!");
             checkoutModal.classList.remove("show");
             
             // Clear cart after successful payment
@@ -4834,6 +4385,7 @@
             
             // Clear localStorage
             localStorage.setItem('cartItems', JSON.stringify([]));
+            const currentUser = localStorage.getItem('currentUser');
             if (currentUser) {
               localStorage.setItem('cart_' + currentUser, JSON.stringify([]));
             }
@@ -4867,176 +4419,7 @@
     })();
   </script>
 
-  <!-- Sliding Navbar Background Script -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const navlinks = document.querySelector('.navlinks');
-      if (navlinks) {
-        const navItems = navlinks.querySelectorAll('a');
-        let slidingBg = navlinks.querySelector('.sliding-bg');
-        
-        // Create sliding background element if it doesn't exist
-        if (!slidingBg) {
-          slidingBg = document.createElement('div');
-          slidingBg.className = 'sliding-bg';
-          navlinks.appendChild(slidingBg);
-        }
-        
-        navItems.forEach((item, index) => {
-          item.addEventListener('mouseenter', function() {
-            const itemRect = this.getBoundingClientRect();
-            const navRect = navlinks.getBoundingClientRect();
-            const left = itemRect.left - navRect.left;
-            const width = itemRect.width;
-            
-            slidingBg.style.left = left + 'px';
-            slidingBg.style.width = width + 'px';
-            slidingBg.style.opacity = '1';
-          });
-          
-          item.addEventListener('mouseleave', function() {
-            // Don't hide immediately, let it stay for smooth transition
-            setTimeout(() => {
-              if (!navlinks.matches(':hover')) {
-                slidingBg.style.opacity = '0';
-              }
-            }, 100);
-          });
-        });
-        
-        // Hide when leaving navlinks container
-        navlinks.addEventListener('mouseleave', function() {
-          slidingBg.style.opacity = '0';
-        });
-      }
-    });
-  </script>
-
-  <!-- Jelly Balls Animation Script (same as index.html) -->
-  <script>
-    const CAN_MOVE = window.innerWidth > 700;
-    const footer = document.getElementById("footer");
-    
-    if (footer) {
-      footer.addEventListener("mousemove", (e) => {
-        const t = document.createElement("div");
-        t.className = "trail";
-        const x = e.clientX - footer.getBoundingClientRect().left;
-        const y = e.clientY - footer.getBoundingClientRect().top;
-        t.style.left = x + "px";
-        t.style.top = y + "px";
-        footer.appendChild(t);
-        setTimeout(() => (t.style.opacity = "0"), 20);
-        setTimeout(() => t.remove(), 500);
-      });
-
-      const balls = [
-        {
-          el: document.getElementById("bubble1"),
-          x: 60,
-          y: 80,
-          vx: 2.1,
-          vy: 1.9,
-        },
-        {
-          el: document.getElementById("bubble2"),
-          x: 180,
-          y: 40,
-          vx: -2.3,
-          vy: 1.7,
-        },
-      ];
-
-      if (CAN_MOVE) {
-        function animate() {
-          const fw = footer.clientWidth;
-          const fh = footer.clientHeight;
-
-          balls.forEach(b => {
-            const size = b.el.clientWidth;
-
-            b.x += b.vx;
-            b.y += b.vy;
-
-            // Bounce X
-            if (b.x <= 0 || b.x + size >= fw) {
-              b.vx *= -1;
-              b.el.style.transform = "scaleX(1.18)";
-              setTimeout(() => (b.el.style.transform = "scale(1)"), 120);
-            }
-
-            // Bounce Y
-            if (b.y <= 0 || b.y + size >= fh) {
-              b.vy *= -1;
-              b.el.style.transform = "scaleY(1.18)";
-              setTimeout(() => (b.el.style.transform = "scale(1)"), 120);
-            }
-
-            // Move
-            b.el.style.left = b.x + "px";
-            b.el.style.top = b.y + "px";
-          });
-
-          requestAnimationFrame(animate);
-        }
-
-        animate();
-      } else {
-        // Static positioning for mobile
-        balls[0].el.style.left = "20px";
-        balls[0].el.style.bottom = "20px";
-        balls[1].el.style.right = "20px";
-        balls[1].el.style.bottom = "20px";
-      }
-    }
-  </script>
-</body>
-</html>
-        }
-
-        // Remove any existing event listeners by cloning
-        const newCartIcon = cartIcon.cloneNode(true);
-        // The clone already contains the cartCount span, so we don't need to add another one
-        cartIcon.parentNode.replaceChild(newCartIcon, cartIcon);
-
-        newCartIcon.addEventListener("click", function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          e.stopImmediatePropagation();
-          const modal = document.getElementById("cartModal");
-          if (modal) {
-            modal.classList.add("show");
-            if (typeof renderCartModal === 'function') {
-              renderCartModal();
-            }
-          }
-          return false;
-        }, true);
-
-        if (cartModalClose) {
-          cartModalClose.addEventListener("click", () => {
-            cartModal.classList.remove("show");
-          });
-        }
-
-        // Close cart modal when clicking outside
-        cartModal.addEventListener("click", (e) => {
-          if (e.target === cartModal) {
-            cartModal.classList.remove("show");
-          }
-        });
-      }
-
-      // Initialize immediately since modal HTML is now above this script
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initCartModalHandlers);
-      } else {
-        initCartModalHandlers();
-      }
-    })();
-  </script>
-
-  <!-- Sliding Navbar Background Script -->
+  <!-- Sliding navbar background effect -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const navlinks = document.querySelector('.navlinks');

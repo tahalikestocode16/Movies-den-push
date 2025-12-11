@@ -1226,7 +1226,7 @@ section:last-child {
     margin:8px 0;
 }
 
-.buy-btn {
+.add-cart-btn {
     padding: 9px 18px;
     background: #ff2a6d;
     color: white;
@@ -1247,7 +1247,7 @@ section:last-child {
     margin-top: 8px;
 }
 
-.buy-btn::before {
+.add-cart-btn::before {
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     content: "\f145";
@@ -1255,7 +1255,7 @@ section:last-child {
     transition: transform 0.3s ease;
 }
 
-.buy-btn::after {
+.add-cart-btn::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -1268,22 +1268,22 @@ section:last-child {
     transition: width 0.6s ease, height 0.6s ease;
 }
 
-.buy-btn:hover {
+.add-cart-btn:hover {
     transform: translateY(-3px) scale(1.05);
     box-shadow: 0 10px 30px rgba(255, 42, 109, 0.5);
     background: #ff5a8d;
 }
 
-.buy-btn:hover::before {
+.add-cart-btn:hover::before {
     transform: scale(1.2) rotate(10deg);
 }
 
-.buy-btn:hover::after {
+.add-cart-btn:hover::after {
     width: 300px;
     height: 300px;
 }
 
-.buy-btn:active {
+.add-cart-btn:active {
     transform: translateY(-1px) scale(1.02);
 }
 
@@ -4877,6 +4877,12 @@ updateHeroContent();
 const heroWishlistBtn = document.getElementById("heroWishlistBtn");
 if (heroWishlistBtn){
   heroWishlistBtn.addEventListener("click", ()=>{
+    // Check if user is logged in
+    if (!isLoggedIn()) {
+      showLoginPopup();
+      return;
+    }
+    
     heroWishlistBtn.classList.toggle("active");
     const isActive = heroWishlistBtn.classList.contains("active");
     
@@ -5005,7 +5011,7 @@ function renderMovies(list){
       <h4>${m[0]}</h4>
       <span class="year">${m[1]}</span>
       <div class="stars">${m[2]}</div>
-      <button class="buy-btn">Buy</button>
+      <button class="add-cart-btn">Buy</button>
       <button class="view-shows-btn">View Shows</button>
     </div>`;
     row.appendChild(card);
@@ -5013,6 +5019,12 @@ function renderMovies(list){
     // Wishlist
     const wishlistBtn = card.querySelector(".wishlist-btn");
     wishlistBtn.addEventListener("click", ()=>{
+        // Check if user is logged in
+        if (!isLoggedIn()) {
+          showLoginPopup();
+          return;
+        }
+        
         wishlistBtn.classList.toggle("active");
         const isActive = wishlistBtn.classList.contains("active");
         if (isActive) {
@@ -5053,7 +5065,7 @@ function renderMovies(list){
     });
 
     // Buy ticket opens modal
-    card.querySelector(".buy-btn").addEventListener("click", ()=> openModal(m));
+    card.querySelector(".add-cart-btn").addEventListener("click", ()=> openModal(m));
     
     // View Shows button
     const viewShowsBtn = card.querySelector(".view-shows-btn");
@@ -5064,6 +5076,9 @@ function renderMovies(list){
       });
     }
   });
+  
+  // Re-setup cart buttons for newly created movie cards
+  setupCart();
 }
 
 function applyFilterAndRender(){
@@ -5511,6 +5526,9 @@ if (burgerBtn && navLinksEl) {
       navLinksEl.classList.remove("show");
     });
   });
+  
+  // Re-setup cart buttons for newly created movie cards
+  setupCart();
 }
 
 // ===== NAVBAR EXPANDABLE SEARCH =====
@@ -5808,45 +5826,6 @@ function initCheckoutModal() {
             anim.innerHTML = "<div style='padding:16px 24px;border-radius:999px;background:rgba(2,2,18,0.95);border:2px solid rgba(255,42,109,0.5);box-shadow:0 14px 35px rgba(0,0,0,0.9);font-size:16px;font-weight:600;animation:purchasePulse 0.9s ease-out;color:#ff2a6d;'>Payment Successful! Enjoy your movie! 🍿</div>";
             document.body.appendChild(anim);
 
-            // Save booking to localStorage BEFORE clearing cart
-            const currentUser = localStorage.getItem('currentUser');
-            if (currentUser) {
-              // Get existing bookings
-              let bookings = [];
-              const storedBookings = localStorage.getItem('bookings_' + currentUser);
-              if (storedBookings) {
-                try {
-                  bookings = JSON.parse(storedBookings);
-                } catch(e) {
-                  bookings = [];
-                }
-              }
-              
-              // Create booking record for each cart item
-              const bookingDate = new Date();
-              const bookingId = 'BK' + Date.now() + Math.random().toString(36).substr(2, 9).toUpperCase();
-              
-              // Since cart is being cleared, we need to save items before clearing
-              const itemsToBook = [...cartItems];
-              
-              // Add each cart item as a booking
-              itemsToBook.forEach(item => {
-                bookings.push({
-                  bookingId: bookingId,
-                  title: item.title || item.name || 'Movie Ticket',
-                  img: item.img || item.image || item.src || 'images/dune.jpg',
-                  totalAmount: parseFloat(item.price) || 9.99,
-                  ticketCount: 1,
-                  bookingDate: bookingDate.toISOString(),
-                  userName: name,
-                  userEmail: email
-                });
-              });
-              
-              // Save updated bookings
-              localStorage.setItem('bookings_' + currentUser, JSON.stringify(bookings));
-            }
-
             // Clear cart completely
             cartItems = [];
             cartCount = 0;
@@ -5854,6 +5833,7 @@ function initCheckoutModal() {
             renderCartModal();
             
             // Clear all cart data from localStorage
+            const currentUser = localStorage.getItem('currentUser');
             localStorage.setItem('cartItems', JSON.stringify([]));
             if (currentUser) {
               localStorage.setItem('cart_' + currentUser, JSON.stringify([]));
@@ -5862,7 +5842,7 @@ function initCheckoutModal() {
             localStorage.removeItem('shoppingCart');
             localStorage.removeItem('userCart');
             
-            showToast("Payment successful! Your tickets have been added to your bookings. Visit your Account to check.");
+            showToast("✅ Payment successful! Thank you!", false, true);
             if (checkoutModal) {
                 checkoutModal.classList.remove("show");
             }
@@ -6288,53 +6268,6 @@ function updateCartDisplay() {
   }
 }
 
-// Map movie titles to their specific image files
-function getMovieImagePath(title) {
-  const imageMap = {
-    // Hero movies from index.html
-    'Batman Beyond': 'images/batman.png',
-    'Bleach: Blood War': 'images/ichigo.jpg',
-    'Dandadan: Season 2': 'images/silk.jpg',
-    'Dandadan: Season 2 ': 'images/silk.jpg',
-    'Jujutsu Kaisen': 'images/kai.jpg',
-    'Spiderverse': 'images/spidey.jpg',
-    'One Piece': 'images/piece.jpg',
-    'Demon Slayer': 'images/tanjiro.jpg',
-    'Interstellar': 'images/hole.jpg',
-    'Cyberbat': 'images/rob.jpg',
-    'Suzume no tojimari': 'images/5815029.jpg',
-    'Suzume no tojimari ': 'images/5815029.jpg',
-    // Carousel movies from index.html
-    'Squidgame': 'images/Squid Game.jpg',
-    'Cyberpunk: Edgerunner': 'images/cyberpunk.jpg',
-    'Suzume': 'images/Suzume (2022) - Makoto Shinkai.jpg',
-    'Inception': 'images/Inception - for @filmthusiast.jpg',
-    'Dandadan: Evil Eye': 'images/dandadan.jpg',
-    'Apothecary Diaries': 'images/_The Apothecary Diaries_.jpg',
-    'Loki Series': 'images/loki.jpg',
-    'Mermaid': 'images/The Little Mermaid ( 11.jpg',
-    '3 Idiots': 'images/3 Idiots (2009)_.jpg',
-    'Dhamaal': 'images/TOTAL DHAMAAL.jpg',
-    'Moana': 'images/New Movie Posters for Moana.jpg',
-    'Luffy': 'images/Luffy.jpg',
-    'Jujutsu kaisen': 'images/jujutsu.jpg',
-    'Solo leveling': 'images/Solo Leveling Poster.jpg',
-    'Solo leveling ': 'images/Solo Leveling Poster.jpg',
-    'Naruto': 'images/naruto.jpg',
-    'Bleach': 'images/Bleach Resonance Of Souls.jpg',
-    // Trending section
-    'Dandadan S1': 'images/ken.jpg',
-    'Spiderverse Beyond': 'images/spiderverse.png',
-    // IMAX movies
-    'Dune': 'images/dune.jpg',
-    'Oppenheimer': 'images/oppenheimer.png',
-    'The Dark Knight': 'images/batman.jpg',
-    'Squid Game': 'images/squid.jpg',
-    'Money Heist': 'images/moneyheist.jpg'
-  };
-  return imageMap[title] || '';
-}
-
 function renderCartModal() {
   const listEl = document.getElementById("cartItemsList");
   if (!listEl) return;
@@ -6359,9 +6292,27 @@ function renderCartModal() {
     item.className = "cartItem";
 
     const img = document.createElement("img");
-    // Use getMovieImagePath to get the correct image for this movie
-    const movieImagePath = getMovieImagePath(itemData.title);
-    let imgSrc = movieImagePath || itemData.img || itemData.image || itemData.src || "images/dune.jpg";
+    // Ensure we use a valid image, not tvicon
+    let imgSrc = itemData.img || itemData.image || itemData.src || "";
+    
+    // Clean up image path - remove full URLs and get just filename
+    if (imgSrc && imgSrc.includes("/")) {
+      const filename = imgSrc.split("/").pop().split("\\").pop();
+      if (filename && !filename.toLowerCase().includes("tvicon") && 
+          (filename.toLowerCase().includes(".jpg") || 
+           filename.toLowerCase().includes(".png") || 
+           filename.toLowerCase().includes(".jpeg") ||
+           filename.toLowerCase().includes(".webp"))) {
+        imgSrc = filename;
+      } else {
+        imgSrc = "images/dune.jpg"; // Default fallback
+      }
+    }
+    
+    // Final check - if still tvicon or empty, use default
+    if (!imgSrc || imgSrc.toLowerCase().includes("tvicon")) {
+      imgSrc = "images/dune.jpg";
+    }
     
     img.src = imgSrc;
     img.alt = itemData.title;
@@ -6421,12 +6372,108 @@ function renderCartModal() {
   if (checkoutBtn) checkoutBtn.disabled = cartItems.length === 0;
 }
 
+// Check if user is logged in
+function isLoggedIn() {
+  return localStorage.getItem('isLoggedIn') === 'true' && localStorage.getItem('currentUser');
+}
+
+// Show login required popup
+function showLoginPopup() {
+  // Create popup if it doesn't exist
+  let popup = document.getElementById('loginPopup');
+  if (!popup) {
+    popup = document.createElement('div');
+    popup.id = 'loginPopup';
+    popup.className = 'cartModal';
+    
+    const popupContent = document.createElement('div');
+    popupContent.className = 'cartModalDialog';
+    
+    popupContent.innerHTML = `
+      <div class="cartModalHeader">
+        <h2>Login Required</h2>
+        <div class="cartModalClose">×</div>
+      </div>
+      <div class="cartModalBody" style="padding: 30px; text-align: center;">
+        <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 30px; line-height: 1.6; font-size: 1.1rem;">
+          You need to have an account to perform this action. Go to sign in page to register or login.
+        </p>
+        <div style="display: flex; gap: 15px; justify-content: center;">
+          <button id="loginBtn" class="add-cart-btn" style="background: linear-gradient(135deg, #ff2a6d, #ff5a8d); border: none; padding: 12px 25px; font-size: 1rem;">
+            <i class="fas fa-sign-in-alt"></i> Login Now
+          </button>
+          <button id="cancelBtn" class="add-cart-btn" style="background: transparent; border: 2px solid rgba(255, 255, 255, 0.3); padding: 12px 25px; font-size: 1rem;">
+            Cancel
+          </button>
+        </div>
+      </div>
+    `;
+    
+    popup.appendChild(popupContent);
+    document.body.appendChild(popup);
+    
+    // Add event listeners
+    popup.querySelector('#loginBtn').addEventListener('click', function() {
+      window.location.href = 'ubaid.html';
+    });
+    
+    popup.querySelector('#cancelBtn').addEventListener('click', function() {
+      popup.classList.remove('show');
+    });
+    
+    // Add hover effects to buttons
+    const loginBtn = popup.querySelector('#loginBtn');
+    const cancelBtn = popup.querySelector('#cancelBtn');
+    
+    loginBtn.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-3px) scale(1.05)';
+      this.style.boxShadow = '0 10px 30px rgba(255, 42, 109, 0.5)';
+      this.style.background = 'linear-gradient(135deg, #ff2a6d, #ff5a8d)';
+    });
+    
+    loginBtn.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0) scale(1)';
+      this.style.boxShadow = 'none';
+      this.style.background = 'linear-gradient(135deg, #ff2a6d, #ff5a8d)';
+    });
+    
+    cancelBtn.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-3px) scale(1.05)';
+      this.style.boxShadow = '0 10px 30px rgba(255, 255, 255, 0.2)';
+      this.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+    });
+    
+    cancelBtn.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0) scale(1)';
+      this.style.boxShadow = 'none';
+      this.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+    });
+    
+    // Close on backdrop click or close button
+    popup.addEventListener('click', function(e) {
+      if (e.target === popup || e.target.classList.contains('cartModalClose')) {
+        popup.classList.remove('show');
+      }
+    });
+  }
+  
+  // Show popup with animation
+  popup.classList.add('show');
+}
+
 function setupCart() {
   const buttons = document.querySelectorAll(".add-cart-btn, .watch-btn");
 
   buttons.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
+      
+      // Check if user is logged in
+      if (!isLoggedIn()) {
+        showLoginPopup();
+        return;
+      }
+      
       const parent =
         btn.closest(".movie") ||
         btn.closest(".card") ||
@@ -6441,11 +6488,7 @@ function setupCart() {
       const imgEl = parent ? parent.querySelector("img") : null;
       let imgSrc = "";
       
-      // First, try to get image from the movie title mapping
-      const movieImagePath = getMovieImagePath(title);
-      if (movieImagePath) {
-        imgSrc = movieImagePath;
-      } else if (imgEl) {
+      if (imgEl) {
         // Get the image source - prefer src attribute over currentSrc
         imgSrc = imgEl.getAttribute("src") || imgEl.src || "";
         
@@ -6762,6 +6805,9 @@ function setupCart() {
           }, 300);
         });
       });
+      
+      // Re-setup cart buttons for newly created movie cards
+      setupCart();
     }
 
     // CVV input handler - flip card
@@ -6839,45 +6885,6 @@ function setupCart() {
         return;
       }
 
-      // Save booking to localStorage BEFORE clearing cart
-      const currentUser = localStorage.getItem('currentUser');
-      if (currentUser) {
-        // Get existing bookings
-        let bookings = [];
-        const storedBookings = localStorage.getItem('bookings_' + currentUser);
-        if (storedBookings) {
-          try {
-            bookings = JSON.parse(storedBookings);
-          } catch(e) {
-            bookings = [];
-          }
-        }
-        
-        // Create booking record for each cart item
-        const bookingDate = new Date();
-        const bookingId = 'BK' + Date.now() + Math.random().toString(36).substr(2, 9).toUpperCase();
-        
-        // Since cart is being cleared, we need to save items before clearing
-        const itemsToBook = [...cartItems];
-        
-        // Add each cart item as a booking
-        itemsToBook.forEach(item => {
-          bookings.push({
-            bookingId: bookingId,
-            title: item.title || item.name || 'Movie Ticket',
-            img: item.img || item.image || item.src || 'images/dune.jpg',
-            totalAmount: parseFloat(item.price) || 9.99,
-            ticketCount: 1,
-            bookingDate: bookingDate.toISOString(),
-            userName: name,
-            userEmail: email
-          });
-        });
-        
-        // Save updated bookings
-        localStorage.setItem('bookings_' + currentUser, JSON.stringify(bookings));
-      }
-
       // Clear cart completely
       cartItems = [];
       cartCount = 0;
@@ -6885,6 +6892,7 @@ function setupCart() {
       renderCartModal();
       
       // Clear all cart data from localStorage
+      const currentUser = localStorage.getItem('currentUser');
       localStorage.setItem('cartItems', JSON.stringify([]));
       if (currentUser) {
         localStorage.setItem('cart_' + currentUser, JSON.stringify([]));

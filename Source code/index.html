@@ -5943,7 +5943,7 @@ body {
         </div>
 
         <div class="movie">
-            <img src="images/parade.png">
+            <img src="images/Inception - for @filmthusiast.jpg">
             <div class="movie-overlay">
                 <div class="movie-stars">
                     <span class="star-icon"></span>
@@ -5952,11 +5952,11 @@ body {
                     <span class="star-icon"></span>
                     <span class="star-icon"></span>
                 </div>
-                <div class="movie-desc">Shonen Anime</div>
+                <div class="movie-desc">Sci-Fi Thriller</div>
                 <div class="add-cart-btn">Add to cart</div>
             </div>
 
-            <div class="movie-title">Death Parade</div>
+            <div class="movie-title">Inception</div>
         </div>
 
         <div class="movie">
@@ -6340,7 +6340,7 @@ body {
         
         <div class="trending-grid">
             <div class="trending-item trending-large">
-                <img src="images/batman.jpg" alt="Batman Beyond">
+                <img src="images/batman.png" alt="Batman Beyond">
                 <div class="trending-info">
                     <span class="trending-badge">#1 Trending</span>
                     <h3>Batman Beyond</h3>
@@ -6355,7 +6355,7 @@ body {
       </div>
             
             <div class="trending-item">
-                <img src="images/dandadan.jpg" alt="Dandadan">
+                <img src="images/ken.jpg" alt="Dandadan">
                 <div class="trending-info">
                     <span class="trending-badge trending-hot">#2 Hot</span>
             <h3>Dandadan S1</h3>
@@ -6369,7 +6369,7 @@ body {
     </div>
 
             <div class="trending-item">
-                <img src="images/spidey.jpg" alt="Spiderverse">
+                <img src="images/spiderverse.png" alt="Spiderverse">
                 <div class="trending-info">
                     <span class="trending-badge trending-new">#3 New</span>
                     <h3>Spiderverse Beyond</h3>
@@ -6383,9 +6383,9 @@ body {
     </div>
 
             <div class="trending-item">
-                <img src="images/kai.jpg" alt="JJK">
+                <img src="images/jjk.jpg" alt="JJK">
                 <div class="trending-info">
-                    <span class="trending-badge">#1 Shonen Jump</span>
+                    <span class="trending-badge">#4 Rising</span>
                     <h3>Jujutsu Kaisen</h3>
                     <p>Shibuya Incident arc</p>
                     <div class="trending-meta">
@@ -7550,53 +7550,6 @@ function updateCartDisplay() {
   }
 }
 
-// Map movie titles to their specific image files
-function getMovieImagePath(title) {
-  const imageMap = {
-    // Hero movies
-    'Batman Beyond': 'images/batman.png',
-    'Bleach: Blood War': 'images/ichigo.jpg',
-    'Dandadan: Season 2': 'images/silk.jpg',
-    'Dandadan: Season 2 ': 'images/silk.jpg',
-    'Jujutsu Kaisen': 'images/kai.jpg',
-    'Spiderverse': 'images/spidey.jpg',
-    'One Piece': 'images/piece.jpg',
-    'Demon Slayer': 'images/tanjiro.jpg',
-    'Interstellar': 'images/hole.jpg',
-    'Cyberbat': 'images/rob.jpg',
-    'Suzume no tojimari': 'images/5815029.jpg',
-    'Suzume no tojimari ': 'images/5815029.jpg',
-    // Carousel movies
-    'Squidgame': 'images/Squid Game.jpg',
-    'Cyberpunk: Edgerunner': 'images/cyberpunk.jpg',
-    'Suzume': 'images/Suzume (2022) - Makoto Shinkai.jpg',
-    'Inception': 'images/Inception - for @filmthusiast.jpg',
-    'Dandadan: Evil Eye': 'images/dandadan.jpg',
-    'Apothecary Diaries': 'images/_The Apothecary Diaries_.jpg',
-    'Loki Series': 'images/loki.jpg',
-    'Mermaid': 'images/The Little Mermaid ( 11.jpg',
-    '3 Idiots': 'images/3 Idiots (2009)_.jpg',
-    'Dhamaal': 'images/TOTAL DHAMAAL.jpg',
-    'Moana': 'images/New Movie Posters for Moana.jpg',
-    'Luffy': 'images/Luffy.jpg',
-    'Jujutsu kaisen': 'images/jujutsu.jpg',
-    'Solo leveling': 'images/Solo Leveling Poster.jpg',
-    'Solo leveling ': 'images/Solo Leveling Poster.jpg',
-    'Naruto': 'images/naruto.jpg',
-    'Bleach': 'images/Bleach Resonance Of Souls.jpg',
-    // Trending section
-    'Dandadan S1': 'images/ken.jpg',
-    'Spiderverse Beyond': 'images/spiderverse.png',
-    // IMAX movies
-    'Dune': 'images/dune.jpg',
-    'Oppenheimer': 'images/oppenheimer.png',
-    'The Dark Knight': 'images/batman.jpg',
-    'Squid Game': 'images/squid.jpg',
-    'Money Heist': 'images/moneyheist.jpg'
-  };
-  return imageMap[title] || '';
-}
-
 function renderCartModal() {
   const listEl = document.getElementById("cartItemsList");
   if (!listEl) return;
@@ -7627,9 +7580,27 @@ function renderCartModal() {
     item.className = "cartItem";
 
     const img = document.createElement("img");
-    // Use getMovieImagePath to get the correct image for this movie
-    const movieImagePath = getMovieImagePath(itemData.title);
-    let imgSrc = movieImagePath || itemData.img || itemData.image || itemData.src || "images/dune.jpg";
+    // Ensure we use a valid image, not tvicon
+    let imgSrc = itemData.img || itemData.image || itemData.src || "";
+    
+    // Clean up image path - remove full URLs and get just filename
+    if (imgSrc && imgSrc.includes("/")) {
+      const filename = imgSrc.split("/").pop().split("\\").pop();
+      if (filename && !filename.toLowerCase().includes("tvicon") && 
+          (filename.toLowerCase().includes(".jpg") || 
+           filename.toLowerCase().includes(".png") || 
+           filename.toLowerCase().includes(".jpeg") ||
+           filename.toLowerCase().includes(".webp"))) {
+        imgSrc = filename;
+      } else {
+        imgSrc = "images/dune.jpg"; // Default fallback
+      }
+    }
+    
+    // Final check - if still tvicon or empty, use default
+    if (!imgSrc || imgSrc.toLowerCase().includes("tvicon")) {
+      imgSrc = "images/dune.jpg";
+    }
     
     img.src = imgSrc;
     img.alt = itemData.title;
@@ -7706,12 +7677,108 @@ function renderCartModal() {
   if (cartTaxEl) cartTaxEl.textContent = `$${tax.toFixed(2)}`;
 }
 
+// Check if user is logged in
+function isLoggedIn() {
+  return localStorage.getItem('isLoggedIn') === 'true' && localStorage.getItem('currentUser');
+}
+
+// Show login required popup
+function showLoginPopup() {
+  // Create popup if it doesn't exist
+  let popup = document.getElementById('loginPopup');
+  if (!popup) {
+    popup = document.createElement('div');
+    popup.id = 'loginPopup';
+    popup.className = 'cartModal';
+    
+    const popupContent = document.createElement('div');
+    popupContent.className = 'cartModalDialog';
+    
+    popupContent.innerHTML = `
+      <div class="cartModalHeader">
+        <h2>Login Required</h2>
+        <div class="cartModalClose">×</div>
+      </div>
+      <div class="cartModalBody" style="padding: 30px; text-align: center;">
+        <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 30px; line-height: 1.6; font-size: 1.1rem;">
+          You need to have an account to perform this action. Go to sign in page to register or login.
+        </p>
+        <div style="display: flex; gap: 15px; justify-content: center;">
+          <button id="loginBtn" class="add-cart-btn" style="background: linear-gradient(135deg, #ff2a6d, #ff5a8d); border: none; padding: 12px 25px; font-size: 1rem;">
+            <i class="fas fa-sign-in-alt"></i> Login Now
+          </button>
+          <button id="cancelBtn" class="add-cart-btn" style="background: transparent; border: 2px solid rgba(255, 255, 255, 0.3); padding: 12px 25px; font-size: 1rem;">
+            Cancel
+          </button>
+        </div>
+      </div>
+    `;
+    
+    popup.appendChild(popupContent);
+    document.body.appendChild(popup);
+    
+    // Add event listeners
+    popup.querySelector('#loginBtn').addEventListener('click', function() {
+      window.location.href = 'ubaid.html';
+    });
+    
+    popup.querySelector('#cancelBtn').addEventListener('click', function() {
+      popup.classList.remove('show');
+    });
+    
+    // Add hover effects to buttons
+    const loginBtn = popup.querySelector('#loginBtn');
+    const cancelBtn = popup.querySelector('#cancelBtn');
+    
+    loginBtn.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-3px) scale(1.05)';
+      this.style.boxShadow = '0 10px 30px rgba(255, 42, 109, 0.5)';
+      this.style.background = 'linear-gradient(135deg, #ff2a6d, #ff5a8d)';
+    });
+    
+    loginBtn.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0) scale(1)';
+      this.style.boxShadow = 'none';
+      this.style.background = 'linear-gradient(135deg, #ff2a6d, #ff5a8d)';
+    });
+    
+    cancelBtn.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-3px) scale(1.05)';
+      this.style.boxShadow = '0 10px 30px rgba(255, 255, 255, 0.2)';
+      this.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+    });
+    
+    cancelBtn.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0) scale(1)';
+      this.style.boxShadow = 'none';
+      this.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+    });
+    
+    // Close on backdrop click or close button
+    popup.addEventListener('click', function(e) {
+      if (e.target === popup || e.target.classList.contains('cartModalClose')) {
+        popup.classList.remove('show');
+      }
+    });
+  }
+  
+  // Show popup with animation
+  popup.classList.add('show');
+}
+
 function setupCart() {
   const buttons = document.querySelectorAll(".add-cart-btn, .watch-btn");
 
   buttons.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
+      
+      // Check if user is logged in
+      if (!isLoggedIn()) {
+        showLoginPopup();
+        return;
+      }
+      
       const parent =
         btn.closest(".movie") ||
         btn.closest(".card") ||
@@ -7735,10 +7802,45 @@ function setupCart() {
       const imgEl = parent ? parent.querySelector("img") : null;
       let imgSrc = "";
       
-      // First, try to get image from the movie title mapping
-      const movieImagePath = getMovieImagePath(title);
-      if (movieImagePath) {
-        imgSrc = movieImagePath;
+      if (imgEl) {
+        // Get the image source - prefer src attribute over currentSrc
+        imgSrc = imgEl.getAttribute("src") || imgEl.src || "";
+        
+        // Extract just the filename from the path
+        if (imgSrc) {
+          // Remove any full URL paths and get just the filename
+          const filename = imgSrc.split("/").pop().split("\\").pop();
+          
+          // Filter out tvicon and use the actual image
+          if (filename && !filename.toLowerCase().includes("tvicon") && 
+              (filename.toLowerCase().includes(".jpg") || 
+               filename.toLowerCase().includes(".png") || 
+               filename.toLowerCase().includes(".jpeg") ||
+               filename.toLowerCase().includes(".webp"))) {
+            imgSrc = filename;
+          } else {
+            // If it's tvicon or invalid, try to find another image in the parent
+            const allImgs = parent ? parent.querySelectorAll("img") : [];
+            for (let img of allImgs) {
+              const altSrc = img.getAttribute("src") || img.src || "";
+              const altFilename = altSrc.split("/").pop().split("\\").pop();
+              if (altFilename && !altFilename.toLowerCase().includes("tvicon") &&
+                  (altFilename.toLowerCase().includes(".jpg") || 
+                   altFilename.toLowerCase().includes(".png") || 
+                   altFilename.toLowerCase().includes(".jpeg") ||
+                   altFilename.toLowerCase().includes(".webp"))) {
+                imgSrc = altFilename;
+                break;
+              }
+            }
+            // If still no good image, use a default
+            if (!imgSrc || imgSrc.toLowerCase().includes("tvicon")) {
+              imgSrc = "images/dune.jpg"; // Default fallback
+            }
+          }
+        } else {
+          imgSrc = "images/dune.jpg"; // Default fallback
+        }
       } else {
         imgSrc = "images/dune.jpg"; // Default fallback
       }
@@ -7815,9 +7917,27 @@ function setupCart() {
       item.className = "cartItem";
 
       const img = document.createElement("img");
-      // Use getMovieImagePath to get the correct image for this movie
-      const movieImagePath = getMovieImagePath(itemData.title);
-      let imgSrc = movieImagePath || itemData.img || itemData.image || itemData.src || "images/dune.jpg";
+      // Ensure we use a valid image, not tvicon
+      let imgSrc = itemData.img || itemData.image || itemData.src || "";
+      
+      // Clean up image path - remove full URLs and get just filename
+      if (imgSrc && imgSrc.includes("/")) {
+        const filename = imgSrc.split("/").pop().split("\\").pop();
+        if (filename && !filename.toLowerCase().includes("tvicon") && 
+            (filename.toLowerCase().includes(".jpg") || 
+             filename.toLowerCase().includes(".png") || 
+             filename.toLowerCase().includes(".jpeg") ||
+             filename.toLowerCase().includes(".webp"))) {
+          imgSrc = filename;
+        } else {
+          imgSrc = "images/dune.jpg"; // Default fallback
+        }
+      }
+      
+      // Final check - if still tvicon or empty, use default
+      if (!imgSrc || imgSrc.toLowerCase().includes("tvicon")) {
+        imgSrc = "images/dune.jpg";
+      }
       
       img.src = imgSrc;
       img.alt = itemData.title;
@@ -8185,27 +8305,6 @@ function setupCart() {
         return;
       }
 
-      // Create bookings from cart items before clearing
-      const currentUser = localStorage.getItem('currentUser');
-      if (cartItems && cartItems.length > 0) {
-        const bookings = JSON.parse(localStorage.getItem('bookings_' + currentUser) || '[]');
-        const now = new Date();
-        
-        cartItems.forEach(item => {
-          const booking = {
-            bookingId: 'BK' + Date.now() + Math.floor(Math.random() * 1000),
-            title: item.title || 'Movie',
-            img: item.img || item.image || item.poster || 'images/dune.jpg',
-            bookingDate: now.toISOString(),
-            totalAmount: item.price || 9.99,
-            ticketCount: 1
-          };
-          bookings.push(booking);
-        });
-        
-        localStorage.setItem('bookings_' + currentUser, JSON.stringify(bookings));
-      }
-      
       // Clear cart completely
       cartItems = [];
       cartCount = 0;
@@ -8213,6 +8312,7 @@ function setupCart() {
       renderCartModal();
       
       // Clear all cart data from localStorage
+      const currentUser = localStorage.getItem('currentUser');
       localStorage.setItem('cartItems', JSON.stringify([]));
       if (currentUser) {
         localStorage.setItem('cart_' + currentUser, JSON.stringify([]));
@@ -8221,7 +8321,7 @@ function setupCart() {
       localStorage.removeItem('shoppingCart');
       localStorage.removeItem('userCart');
       
-      showToast("Payment successful! Your tickets have been added to your bookings. Visit your Account to check.");
+      showToast("Payment successful (demo). Thank you!");
       checkoutModal.classList.remove("show");
     });
   }
@@ -8235,6 +8335,13 @@ const heroBuyTicketBtn = document.getElementById("heroBuyTicket");
 if (heroBuyTicketBtn) {
   heroBuyTicketBtn.addEventListener("click", (e) => {
     e.stopPropagation();
+    
+    // Check if user is logged in
+    if (!isLoggedIn()) {
+      showLoginPopup();
+      return;
+    }
+    
     const heroTitle = document.querySelector(".hero .title");
     const title = heroTitle ? heroTitle.textContent.trim() : "Batman Beyond";
     const heroImg = document.querySelector(".hero .poster img") || document.querySelector(".hero img");
@@ -8448,15 +8555,15 @@ if (document.readyState === "loading") {
             { title: 'Dandadan', image: 'images/dandadan.jpg', rating: '★★★★★' },
             { title: 'Jujutsu Kaisen', image: 'images/jjk.jpg', rating: '★★★★★' },
             { title: 'Solo Leveling', image: 'images/Solo Leveling Poster.jpg', rating: '★★★★☆' },
-            { title: 'Death Parade', image: 'images/parade.jpg', rating: '★★★★☆' },
+            { title: 'The Marvels', image: 'images/supe.png', rating: '★★★★☆' },
             { title: 'Deadpool 3', image: 'images/Shawn Levy is set to direct DEADPOOL 3_.jpg', rating: '★★★★★' }
         ],
         drama: [
             { title: 'Dandadan', image: 'images/dandadan.jpg', rating: '★★★★★' },
             { title: 'Monster', image: 'images/jjk.jpg', rating: '★★★★★' },
             { title: 'Dragon Ball Super', image: 'images/ken.jpg', rating: '★★★★☆' },
-            { title: 'My Hero Academia', image: 'images/My Hero Academia_ Season 6 - Key Art Wall Poster, 22_375_ x 34_ - Walmart.ca', rating: '★★★★☆' },
-            { title: 'Loki Series', image: 'images/mermaid.png', rating: '★★★★★' },
+            { title: 'My Hero Academia', image: 'My Hero Academia_ Season 6 - Key Art Wall Poster, 22_375_ x 34_ - Walmart.ca', rating: '★★★★☆' },
+            { title: 'Loki Series', image: 'images/supe.png', rating: '★★★★★' },
             { title: 'The Last of Us', image: 'images/The last of us Font - forum.jpg', rating: '★★★★★' }
         ],
         animation: [
@@ -8599,8 +8706,6 @@ if (document.readyState === "loading") {
     </script>
   </body>
 </html>
-
-
 
 
 
